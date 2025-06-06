@@ -16,13 +16,13 @@ const clerkWebhooks = async (req, res) => {
         switch (type) {
             case 'user.created': {
                 const userData = {
-                    _id: data.id,
-                    email: data.email_addresses[0].email_address,
-                    name: data.first_name + " " + data.last_name,
-                    imageUrl: data.imageUrl,
-                }
-                await User.create(userData)
-                res.json({})
+                _id: data.id,
+                email: data.email_addresses[0].email_address, // ✅ Sửa chỗ này
+                name: `${data.first_name} ${data.last_name}`,
+                imageUrl: data.image_url, // ✅ sửa đúng key từ Clerk
+                };
+                await User.create(userData);
+                res.json({});
                 break;
             }
             case 'user.updated': {
