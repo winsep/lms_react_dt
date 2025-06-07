@@ -8,14 +8,14 @@ import clerkWebhooks from './controllers/webhooks.js'
 const app = express()
 
 // connect to database
-await connectDB()
+connectDB()
 
 //middleware
 app.use(cors())
 
 //routes
 app.get('/', (req, res) => res.send("API Working"))
-app.post('/clerk', express.json(), clerkWebhooks)
+app.use('/clerk', express.json(), clerkWebhooks)
 
 //port
 const PORT = process.env.PORT || 5000
