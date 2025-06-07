@@ -3,15 +3,18 @@ import User from "../models/User.js";
 
 // api controller fuction
 
-export const clerkWebhooks = async (req, res) => {
+const clerkWebhooks = async (req, res) => {
     try {
         const whook = new Webhook(process.env.CLERK_WEBHOOK_SECRET)
 
-        await whook.verify(JSON.stringify(req.body), {
-            "svix-id": req.headers["svix-id"],
-            "svix-timestamp": req.headers["svix-timestamp"],
-            "svix-signature": req.headers["svix-signature"],
-        })
+         const headers ={
+            "svix-id": req.headers['svix-id'],
+            "svix-timestamp": req.headers['svix-timestamp'],
+            "svix-signature": req.headers['svix-signature'],
+        };
+        
+        await whook.verify(JSON.stringify(req.body), headers);
+        
 
         const {data, type} = req.body
 
@@ -24,21 +27,18 @@ export const clerkWebhooks = async (req, res) => {
         switch (type) {
             case 'user.created': {
                
-                await User.create(userData)
-                res.json({})
+                await User.create(userData);
                 break;
             }
 
             case 'user.updated' : {
                
-                await User.findByIdAndUpdate(data.id, userData)
-                res.json ({})
+                await User.findByIdAndUpdate(data.id, userData);
                 break;
             }
 
             case 'user.deleted' : {
-                await User.findByIdAndDelete(data.id)
-                res.json({})
+                await User.findByIdAndDelete(data.id);
                 break;
             }
             default:
@@ -48,3 +48,5 @@ export const clerkWebhooks = async (req, res) => {
         res.json({success: false, message: error.message})
     }
 }
+
+export default clerkWebhooks
