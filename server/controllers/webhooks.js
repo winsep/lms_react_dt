@@ -3,7 +3,7 @@ import User from "../models/User.js";
 
 // api controller fuction
 
-const clerkWebhooks = async (req, res) => {
+export const clerkWebhooks = async (req, res) => {
     try {
         const whook = new Webhook(process.env.CLERK_WEBHOOK_SECRET)
 
@@ -13,10 +13,10 @@ const clerkWebhooks = async (req, res) => {
             "svix-signature": req.headers["svix-signature"],
         })
 
-        const {data,type} = req.body
+        const {data, type} = req.body
 
         switch (type) {
-            case 'User.created': {
+            case 'user.created': {
                 const userData = {
                     _id: data.id,
                     email: data.email_addresses[0].email_address,
@@ -30,7 +30,7 @@ const clerkWebhooks = async (req, res) => {
 
             case 'user.updated' : {
                  const userData = {
-                    email: data.email_addresses[0].email_address,
+                    email: data.email_address[0].email_address,
                     name: data.first_name + " " + data.last_name,
                     imageUrl: data.image_url,
                 }
@@ -51,5 +51,3 @@ const clerkWebhooks = async (req, res) => {
         res.json({success: false, message: error.message})
     }
 }
-
-export default clerkWebhooks
