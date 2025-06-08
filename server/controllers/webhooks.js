@@ -25,17 +25,19 @@ const clerkWebhooks = async (req, res) => {
         switch (type) {
             case 'user.created': {
                 await User.create(userData);
+                res.json({})
                 break;
             }
 
             case 'user.updated' : {
-               
                 await User.findByIdAndUpdate(data.id, userData);
+                res.json({})
                 break;
             }
 
             case 'user.deleted' : {
                 await User.findByIdAndDelete(data.id);
+                res.json({})
                 break;
             }
             default:
