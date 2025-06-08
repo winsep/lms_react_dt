@@ -1,19 +1,17 @@
 import { Webhook } from "svix";
-import User from "../models/User.js";
+import User from "../models/User.js";   
 
 // api controller fuction
 
 const clerkWebhooks = async (req, res) => {
     try {
         const whook = new Webhook(process.env.CLERK_WEBHOOK_SECRET)
-
-         const headers ={
-            "svix-id": req.headers['svix-id'],
-            "svix-timestamp": req.headers['svix-timestamp'],
-            "svix-signature": req.headers['svix-signature'],
-        };
         
-        await whook.verify(JSON.stringify(req.body), headers);
+        await whook.verify(JSON.stringify(req.body), {
+            "svix-id": req.headers["svix-id"],
+            "svix-timestamp": req.headers["svix-timestamp"],
+            "svix-signature": req.headers["svix-signature"],
+        });
         
 
         const {data, type} = req.body
@@ -23,10 +21,9 @@ const clerkWebhooks = async (req, res) => {
             name: data.first_name + ' ' + data.last_name,
             email: data.email_addresses[0].email_address,
             image: data.image_url,
-    }
+        }
         switch (type) {
             case 'user.created': {
-               
                 await User.create(userData);
                 break;
             }
