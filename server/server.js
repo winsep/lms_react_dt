@@ -8,6 +8,7 @@ import educatorRouter from './routes/educatorRoutes.js';
 import connectCloudinary from './configs/cloudinary.js';
 import courseRouter from './routes/courseRoute.js';
 import userRouter from './routes/userRoutes.js';
+import bodyParser from 'body-parser'
 
 // initialize express
 const app = express()
@@ -27,7 +28,7 @@ app.use('/api/clerk', express.json(), clerkWebhooks)
 app.use('/api/educator', express.json(), educatorRouter)
 app.use('/api/course', express.json(), courseRouter)
 app.use('/api/user', express.json(), userRouter)
-app.post('/stripe', express.json({type: 'application/json'}), stripeWebhooks)
+app.post('/stripe', bodyParser.raw({ type: 'application/json' }), stripeWebhooks)
 
 //port
 const PORT = process.env.PORT || 5000
