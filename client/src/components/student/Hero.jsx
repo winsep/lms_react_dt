@@ -6,8 +6,8 @@ const Hero = () => {
   return (
     <div className="flex flex-col items-center justify-center w-full md:pt-36 pt-20 px-7 md:px-0 space-y-7 text-center bg-gradient-to-b from-cyan-100/70">
       <h1 className="md:text-5xl text-3xl relative font-bold text-gray-800 max-w-3xl mx-auto">
-        Empower your future with the courses designed to
-        <span className="text-blue-600"> fit your choice. </span>
+        Trao quyền cho tương lai của bạn với các khóa học được thiết kế để
+        <span className="text-blue-600"> phù hợp với lựa chọn của bạn. </span>
         <img
           src={assets.sketch}
           alt="sketch"
@@ -15,12 +15,11 @@ const Hero = () => {
         />
       </h1>
       <p className="md:block hidden text-gray-500 max-w-2xl mx-auto md:text-base text-sm">
-        We bring together world-class instructors, interactive content, and a
-        supportive community to help you achieve your personal and professional
-        goals.
+        Chúng tôi mang đến những giảng viên hàng đầu thế giới, nội dung tương tác và một
+        cộng đồng hỗ trợ để giúp bạn đạt được các mục tiêu cá nhân và nghề nghiệp.
       </p>
       <p className="md:hidden text-gray-500 max-w-sm mx-auto md:text-base text-sm">
-        We bring together world-class instructors to help you achieve your professional goals.
+        Chúng tôi mang đến những giảng viên hàng đầu thế giới để giúp bạn đạt được các mục tiêu nghề nghiệp.
       </p>
       <SearchBar />
     </div>

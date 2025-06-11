@@ -4,9 +4,6 @@ import {v2 as cloudinary} from 'cloudinary'
 import { Purchase } from '../models/Purchase.js'
 import User from '../models/User.js'
 
-
-
-
 // update role to educator
 export const updateRoleToEducator = async (req, res) => {
     try {
@@ -126,3 +123,73 @@ export const getEnrolledStudentsData = async (req, res)=> {
             res.json({success: false, message: error.message})
         }
     }
+    // chinh sua
+    export const getCourseById = async (req, res) => {
+        try {
+            const course = await Course.findById(req.params.id)
+            if (!course) {
+            return res.status(404).json({ success: false, message: 'Course not found' })
+            }
+            if (course.educator.toString() !== req.auth.userId) {
+            return res.status(403).json({ success: false, message: 'Not authorized' })
+            }
+            res.json({ success: true, course })
+        } catch (error) {
+            res.status(500).json({ success: false, message: error.message })
+        }
+    }
+
+
+    export const updateCourse = async (req, res) => {
+        try {
+            const course = await Course.findById(req.params.id);
+            if (!course)
+            return res.status(404).json({ success: false, message: "Course not found" });
+
+            if (course.educator.toString() !== req.auth.userId)
+            return res.status(403).json({ success: false, message: "Not authorized" });
+
+            const { courseData } = req.body;
+            const parsedData = JSON.parse(courseData);
+
+            course.courseTitle = parsedData.courseTitle;
+            course.courseDescription = parsedData.courseDescription;
+            course.coursePrice = parsedData.coursePrice;
+            course.discount = parsedData.discount;
+            course.courseContent = parsedData.courseContent;
+
+            // Nếu có ảnh mới, upload lên Cloudinary
+            if (req.file) {
+            const imageUpload = await cloudinary.uploader.upload(req.file.path);
+            course.courseThumbnail = imageUpload.secure_url;
+            }
+
+            await course.save();
+
+            res.json({ success: true, message: "Course Updated", course });
+        } catch (error) {
+            res.status(500).json({ success: false, message: error.message });
+        }
+    };
+
+
+
+    // xoa khoa hoc
+    export const deleteCourse = async (req, res) => {
+    try {
+        const courseId = req.params.id;
+        const educatorId = req.auth.userId;
+
+        const course = await Course.findOne({ _id: courseId, educator: educatorId });
+        if (!course) {
+        return res.status(404).json({ success: false, message: 'Course not found' });
+        }
+
+        await course.deleteOne();
+
+        res.json({ success: true, message: 'Course deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+    };
+
